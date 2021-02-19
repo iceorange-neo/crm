@@ -51,14 +51,27 @@
 			// 在后台验证登录
 			// 发送Ajax请求Post方式
 			$.ajax({
-				url:"",
+				url:"settings/user/login.do",
 				data:{
-
+					"loginAct":loginAct,
+					"loginPwd":loginPwd
 				},
-				type:"",
+				type:"post",
 				dataType:"json",
 				success:function(data){
+					/*
+						data
+							{"success":true/false,"msg":"哪儿错了"}
+					 */
+					// 如果登录成功
+					if(data.success){
 
+						// 跳转到工作台的初始页面（欢迎页面）
+						window.location.href = "workbench/index.html";
+					// 如果登录失败
+					}else{
+						$("#msg").html(data.message);
+					}
 				},
 
 			})
