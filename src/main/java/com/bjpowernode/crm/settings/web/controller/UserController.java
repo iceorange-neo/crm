@@ -3,6 +3,7 @@ package com.bjpowernode.crm.settings.web.controller;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.settings.service.IUserService;
 import com.bjpowernode.crm.settings.service.impl.IUserServiceImpl;
+import com.bjpowernode.crm.utils.MD5Util;
 import com.bjpowernode.crm.utils.PrintJson;
 import com.bjpowernode.crm.utils.ServiceFactory;
 import com.bjpowernode.crm.utils.UUIDUtil;
@@ -43,7 +44,7 @@ public class UserController extends HttpServlet {
         String loginAct = request.getParameter("loginAct");
         String loginPwd = request.getParameter("loginPwd");
         // 将密码的明文形式转化为MD5
-        loginPwd = UUIDUtil.getUUID(loginPwd);
+        loginPwd = MD5Util.getMD5(loginPwd);
         //
         System.out.println("----------------------经过MD5加密的密码是：" + loginPwd);
         // 接收客户端ip地址
