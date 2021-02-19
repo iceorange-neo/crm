@@ -70,7 +70,7 @@
 						window.location.href = "workbench/index.html";
 					// 如果登录失败
 					}else{
-						$("#msg").html(data.message);
+						$("#msg").html(data.msg);
 					}
 				},
 
