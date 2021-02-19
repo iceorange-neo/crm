@@ -29,7 +29,7 @@ public class UserController extends HttpServlet {
 
         if("/settings/user/login.do".equals(path)){
 
-            // xxx(request, response);
+            login(request, response);
 
         }else if("/settings/user/xxx.do".equals(path)){
 
@@ -44,6 +44,8 @@ public class UserController extends HttpServlet {
         String loginPwd = request.getParameter("loginPwd");
         // 将密码的明文形式转化为MD5
         loginPwd = UUIDUtil.getUUID(loginPwd);
+        //
+        System.out.println("----------------------经过MD5加密的密码是：" + loginPwd);
         // 接收客户端ip地址
         String ip = request.getRemoteAddr();
         System.out.println("-----------------------ip:" + ip);

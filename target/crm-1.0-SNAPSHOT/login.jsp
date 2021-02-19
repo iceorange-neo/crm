@@ -24,13 +24,16 @@
 			// event:可以取得敲击的是哪个按键
 			$(window).keydown(function(event){
 				// alert(event.keyCode);
-				var code = event.keyCode
-				if(code == 13){
-					// 执行登录验证
+				// var code = event.keyCode;
+				// if(code == 13){
+				// 	// 执行登录验证
+				// 	login();
+				// }
+				if(event.keyCode == 13){
 					login();
 				}
 			});
-		})
+		});
 		// 封装登录验证的方法
 		function login(){
 			// 验证账号密码不能为空
@@ -51,16 +54,28 @@
 			// 在后台验证登录
 			// 发送Ajax请求Post方式
 			$.ajax({
-				url:"",
+				url:"settings/user/login.do",
 				data:{
-
+					"loginAct":loginAct,
+					"loginPwd":loginPwd
 				},
-				type:"",
+				type:"post",
 				dataType:"json",
 				success:function(data){
+					/*
+						data
+							{"success":true/false,"msg":"哪儿错了"}
+					 */
+					// 如果登录成功
+					if(data.success){
 
-				},
-
+						// 跳转到工作台的初始页面（欢迎页面）
+						window.location.href = "workbench/index.html";
+					// 如果登录失败
+					}else{
+						$("#msg").html(data.msg);
+					}
+				}
 			})
 		}
 	</script>
@@ -88,7 +103,7 @@
 					</div>
 					<div class="checkbox"  style="position: relative;top: 30px; left: 10px;">
 							<!--显示错误信息的位置-->
-							<span id="msg" style="color: red">123</span>
+							<span id="msg" style="color: red"></span>
 						
 					</div>
 					<!--

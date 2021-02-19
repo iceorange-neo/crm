@@ -1,5 +1,9 @@
 package com.bjpowernode.crm.settings.dao;
 
+import com.bjpowernode.crm.settings.domain.User;
+
+import java.util.Map;
+
 /**
  * @author neo
  * @date 2021/2/18
@@ -7,4 +11,5 @@ package com.bjpowernode.crm.settings.dao;
  */
 public interface IUserDao {
 
+    User login(Map<String, String> map);
 }

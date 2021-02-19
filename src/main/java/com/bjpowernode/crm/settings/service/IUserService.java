@@ -1,5 +1,6 @@
 package com.bjpowernode.crm.settings.service;
 
+import com.bjpowernode.crm.exception.LoginException;
 import com.bjpowernode.crm.settings.domain.User;
 
 /**
@@ -8,7 +9,7 @@ import com.bjpowernode.crm.settings.domain.User;
  * @time 21:50
  */
 public interface IUserService {
-    User login(String loginAct, String loginPwd, String ip);
+    User login(String loginAct, String loginPwd, String ip) throws LoginException;
 }
 
 
