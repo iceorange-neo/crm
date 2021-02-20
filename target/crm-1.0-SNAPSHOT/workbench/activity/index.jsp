@@ -25,10 +25,53 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				需要操作的模态窗口的jquery对象，调用modal方法，向其中传递参数 show：展现   hide：关闭
 		 */
 		$("#addBtn").click(function(){
-			alert("=======");
-			$("#createActivityModal").modal("show");
+			// alert("=======");
+			// $("#createActivityModal").modal("show");
+
+			// 走后台，目的是为了取得用户信息列表，为所有者下拉框铺值
+			$.ajax({
+				url:"workbench/activity/getUserList.do",
+				data:{
+					// 无脑查所有
+				},
+				dataType:"json",
+				success:function(data){
+
+					/*
+
+						data：需要从后台获取用户信息列表
+						List<User> uList
+						json = [
+							{"zx","?","?"},
+							{"ls","?",">"},
+							...
+						]
+
+					 */
+					var html = "<option></option>"
+
+					// 遍历出来的每一个obj就是每一个用户的信息
+					$.each(data, function(index, obj){
+
+						html += "<option value='"+obj.id+"'>"+obj.name+"</option>";
+
+					})
+
+					$("#create-marketActivityOwner").append(html);
+
+					// 取得当前用户的id
+					// 在js中使用EL表达式，EL表达式一定要套在字符串中
+					var defaultUUID = "${sessionScope.user.id}";
+
+					$("#create-marketActivityOwner").val(defaultUUID);
+
+					// 所有者展现完毕后展现模态窗口
+					$("#createActivityModal").modal("show");
+
+				},
+				type:"get",
+			})
 		})
-		
 	});
 	
 </script>
@@ -53,9 +96,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
 								<select class="form-control" id="create-marketActivityOwner">
-								  <option>zhangsan</option>
-								  <option>lisi</option>
-								  <option>wangwu</option>
+<%--								  <option>zhangsan</option>--%>
+<%--								  <option>lisi</option>--%>
+<%--								  <option>wangwu</option>--%>
+									
 								</select>
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>

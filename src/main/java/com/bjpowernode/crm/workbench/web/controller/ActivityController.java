@@ -1,10 +1,17 @@
 package com.bjpowernode.crm.workbench.web.controller;
 
+import com.bjpowernode.crm.settings.domain.User;
+import com.bjpowernode.crm.settings.service.IUserService;
+import com.bjpowernode.crm.settings.service.impl.IUserServiceImpl;
+import com.bjpowernode.crm.utils.PrintJson;
+import com.bjpowernode.crm.utils.ServiceFactory;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author neo
@@ -19,9 +26,9 @@ public class ActivityController extends HttpServlet {
         System.out.println("进入市场活动控制器");
 
         String path = request.getServletPath();
-        if("/workbench/activity/xxx.do".equals(path)){
+        if("/workbench/activity/getUserList.do".equals(path)){
 
-            // xxx(request, response);
+             getUserList(request, response);
 
         }else if("/workbench/activity/xxx.do".equals(path)){
 
@@ -30,5 +37,16 @@ public class ActivityController extends HttpServlet {
         }
 
 
+    }
+
+    private void getUserList(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("取得用户信息列表");
+
+        IUserService us = (IUserService) ServiceFactory.getService(new IUserServiceImpl());
+
+        List<User> uList = us.getUserList();
+
+        PrintJson.printJsonObj(response, uList);
     }
 }
