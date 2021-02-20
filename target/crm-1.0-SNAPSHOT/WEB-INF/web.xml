@@ -6,6 +6,7 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+    <!--EncodingFilter-->
     <filter>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.bjpowernode.crm.web.filter.EncodingFilter</filter-class>
@@ -14,6 +15,19 @@
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
+
+    <!--LoginFilter-->
+    <filter>
+        <filter-name>LoginFiler</filter-name>
+        <filter-class>com.bjpowernode.crm.web.filter.LoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>LoginFiler</filter-name>
+<!--        过滤所有的后台资源-->
+        <url-pattern>*.do</url-pattern>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
+
     <!--UserController-->
     <servlet>
         <servlet-name>UserController</servlet-name>
