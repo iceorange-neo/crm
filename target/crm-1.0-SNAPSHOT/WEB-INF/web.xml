@@ -3,6 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
+    <!--
+        约定的结构：
+        add/create:跳转到添加页，或者打开添加操作的模态窗口
+        save：执行添加操作
+        edit：跳转到修改页，或者打开修改操作的模态窗口
+        get：执行查询操作    find/select/query...
+        特殊操作：login等
+
+    -->
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
