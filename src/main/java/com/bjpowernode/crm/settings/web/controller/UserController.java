@@ -6,7 +6,6 @@ import com.bjpowernode.crm.settings.service.impl.IUserServiceImpl;
 import com.bjpowernode.crm.utils.MD5Util;
 import com.bjpowernode.crm.utils.PrintJson;
 import com.bjpowernode.crm.utils.ServiceFactory;
-import com.bjpowernode.crm.utils.UUIDUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -94,9 +93,5 @@ public class UserController extends HttpServlet {
             map.put("msg", msg);
             PrintJson.printJsonObj(response, map);
         }
-
-
-
-
     }
 }

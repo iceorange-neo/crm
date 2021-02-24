@@ -9,8 +9,8 @@ public class Activity {
     private String id;  // 主键
     private String owner;  // 所有者（市场活动是谁的）关联的是tbl_user的外键（id）UUID是32位的
     private String name;  // 市场活动名称
-    private String startDate;  // 开始日期 年月日 12位
-    private String endDate;  // 结束日期 年月日 12位
+    private String startDate;  // 开始日期 年月日 10位
+    private String endDate;  // 结束日期 年月日 10位
     private String cost;  // 活动成本
     private String description;  // 描述信息
     private String createTime;  // 创建时间 年月日时分秒 19位

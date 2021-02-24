@@ -53,7 +53,8 @@ public class PrintJson {
 		 * 
 		 * 
 		 */
-		
+
+		// jackson
 		ObjectMapper om = new ObjectMapper();
 		try {
 			String json = om.writeValueAsString(obj);

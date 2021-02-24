@@ -24,7 +24,21 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			操作模态窗口的方式：
 				需要操作的模态窗口的jquery对象，调用modal方法，向其中传递参数 show：展现   hide：关闭
 		 */
+
+		//  为了创建按钮绑定事件，打开添加操作的模态窗口
 		$("#addBtn").click(function(){
+
+			$("#create-owner").html("");
+			// 日期插件
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+
 			// alert("=======");
 			// $("#createActivityModal").modal("show");
 
@@ -57,13 +71,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 					})
 
-					$("#create-marketActivityOwner").append(html);
+					$("#create-owner").append(html);
 
 					// 取得当前用户的id
 					// 在js中使用EL表达式，EL表达式一定要套在字符串中
 					var defaultUUID = "${sessionScope.user.id}";
 
-					$("#create-marketActivityOwner").val(defaultUUID);
+					$("#create-owner").val(defaultUUID);
 
 					// 所有者展现完毕后展现模态窗口
 					$("#createActivityModal").modal("show");
@@ -72,8 +86,153 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				type:"get",
 			})
 		})
+
+		// 为保存按钮绑定事件，执行添加操作
+		$("#saveBtn").click(function(){
+
+			$.ajax({
+				url:"workbench/activity/save.do",
+				data:{
+					"owner":$.trim($("#create-owner").val()),
+					"name":$.trim($("#create-name").val()),
+					"startDate":$.trim($("#create-startDate").val()),
+					"endDate":$.trim($("#create-endDate").val()),
+					"cost":$.trim($("#create-cost").val()),
+					"description":$.trim($("#create-description").val())
+				},
+				dataType:"json",
+				type:"post",
+				success:function(data){
+
+					/*
+						data:
+							{"success":true/false}
+
+					 */
+					if(data.success){
+
+						// 添加市场活动成功后
+						// 刷新市场活动信息列表（局部刷新）
+
+                        // 清空添加操作模态窗口中的数据
+                        // 提交表单
+                        // $("#activityAddForm").submit();
+                        // $("#activityAddForm").reset();
+                        /*
+
+                            注意：
+                                我们拿到了form表单的jquery对象
+                                对于表单的jquery对象，提供了submit()方法让我们提交表单
+                                但是表单的jquery对象，没有为我们提供reset()方法让我们重置表单
+
+                                虽然form的jquery对象没有为我们提供reset方法，但是原先的js对象
+                                当中有reset方法。我们可以将其转化为DOM对象调用该方法。
+
+                                jquery对象转化为dom对象
+                                    jquery对象[下标]
+
+                                dom对象转换为jquery对象
+                                    $(dom对象)
+                        */
+                        // var $objArray = $("#activityAddForm");
+                        // var domObj = $objArray[0];
+                        // domObj.reset();
+                        $("#activityAddForm")[0].reset();
+
+						// 关闭添加操作的模态窗口
+						$("#createActivityModal").modal("hide");
+
+					}else{
+
+                        // 添加市场活动失败
+						alert("添加市场活动失败");
+					}
+
+				}
+			})
+
+		})
+
+		// 页面加载完毕后触发一个方法
+		// 默认展开列表的第一页，每页展示两条数据
+		pageList(1, 2);
+
+		// 为查询按钮绑定事件，触发pageList方法
+		$("#searchBtn").click(function(){
+
+			pageList(1, 2);
+
+		})
+		//
+
 	});
-	
+
+	/*
+		对于所有的关系型数据库，做前端的分页相关操作的基础组件
+		就是pageNo和pageSize
+		pageNo：页面
+		pageSize：每页展示的记录数
+
+		pageList方法：就是发出ajax请求到后台，从后台取出最新的市场活动信息列表的数据
+			通过响应回来的数据，局部刷新市场活动列表。
+
+		我们都在哪些情况下，需要调用pageList方法（什么情况下需要刷新一下市场活动列表）
+		1) 点击左侧菜单栏中的“市场活动”超链接，需要刷新市场活动列表，调用pageList方法
+		2) 添加、修改、删除后，需要刷新市场活动列表，调用pageList方法。
+		3) 点击查询按钮的时候，需要刷新市场活动列表，调用pageList方法。
+		4) 点击分页组件的时候，调用pageList方法。
+
+		以上为pageList方法指定了六个入口，也就是说，在以上6个操作执行完毕后，我们必须要调用pageList方法，刷新市场活动列表。
+
+	 */
+	function pageList(pageNo, pageSize){
+		// alert("市场活动列表");
+
+		$.ajax({
+			url:"workbench/activity/pageList.do",
+			data:{
+
+				"pageNo":pageNo,
+				"pageSize":pageSize,
+				"name":$.trim($("#search-name").val()),
+				"owner":$.trim($("#search-owner").val()),
+				"startDate":$.trim($("#search-starDate").val()),
+				"endDate":$.trim($("#search-endDate").val())
+			},
+			pageType:"json",
+			type:"get",
+			success:function(data){
+
+				/*
+					data
+						我们需要的，市场活动信息列表
+						[{市场活动1},{},{}...] List<Activity> aList
+						一会分页插件需要的：查询出来的总记录数
+						{"total":100}  int total
+						{"total":100,"dataList":[
+							{市场活动1},{},{}...
+						]}
+				 */
+
+
+				var html = "";
+
+				alert(data);
+				// 每一个activity就是每一个市场活动对象
+
+				var array = [1,5,5];
+				$.each(data.dataList, function(index, obj){
+
+				});
+
+				$("#activityBody").html(html);
+				//
+			},
+		})
+
+		//
+	}
+
 </script>
 </head>
 <body>
@@ -89,13 +248,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<h4 class="modal-title" id="myModalLabel1">创建市场活动</h4>
 				</div>
 				<div class="modal-body">
-				
-					<form class="form-horizontal" role="form">
-					
+
+					<form  id="activityAddForm" class="form-horizontal" role="form">
+
 						<div class="form-group">
 							<label for="create-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="create-marketActivityOwner">
+								<select class="form-control" id="create-owner">
 <%--								  <option>zhangsan</option>--%>
 <%--								  <option>lisi</option>--%>
 <%--								  <option>wangwu</option>--%>
@@ -104,18 +263,18 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							</div>
                             <label for="create-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="create-marketActivityName">
+                                <input type="text" class="form-control" id="create-name">
                             </div>
 						</div>
 						
 						<div class="form-group">
 							<label for="create-startTime" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-startTime">
+								<input type="text" class="form-control time" id="create-startDate" readonly>
 							</div>
 							<label for="create-endTime" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="create-endTime">
+								<input type="text" class="form-control time" id="create-endDate" readonly>
 							</div>
 						</div>
                         <div class="form-group">
@@ -128,7 +287,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-describe" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="create-describe"></textarea>
+								<textarea class="form-control" rows="3" id="create-description"></textarea>
 							</div>
 						</div>
 						
@@ -136,8 +295,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					
 				</div>
 				<div class="modal-footer">
+
+					<!--
+						data-dismiss="modal"
+							表示关闭模态窗口
+					-->
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="saveBtn">保存</button>
 				</div>
 			</div>
 		</div>
@@ -227,14 +391,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner">
 				    </div>
 				  </div>
 
@@ -242,17 +406,17 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
+					  <input class="form-control" type="text" id="search-starDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control" type="text" id="search-endDate">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button id="searchBtn" type="button" class="btn btn-default">查询</button>
 				  
 				</form>
 			</div>
@@ -289,21 +453,21 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-                            <td>2020-10-10</td>
-                            <td>2020-10-20</td>
-                        </tr>
+					<tbody id="activityBody">
+<%--						<tr class="active">--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='workbench/activity/detail.jsp';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>2020-10-10</td>--%>
+<%--                            <td>2020-10-20</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
 			</div>

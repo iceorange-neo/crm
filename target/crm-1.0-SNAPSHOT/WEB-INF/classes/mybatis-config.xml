@@ -20,5 +20,6 @@
     </environments>
     <mappers>
         <mapper resource="com/bjpowernode/crm/settings/dao/IUserDao.xml" />
+        <mapper resource="com/bjpowernode/crm/workbench/dao/ActivityDao.xml" />
     </mappers>
 </configuration>
