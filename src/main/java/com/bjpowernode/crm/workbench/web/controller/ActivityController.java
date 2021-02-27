@@ -47,7 +47,25 @@ public class ActivityController extends HttpServlet {
 
             pageList(request, response);
             
+        }else if("/workbench/activity/delete.do".equals(path)){
+
+            delete(request, response);
         }
+
+
+    }
+
+    private void delete(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("执行市场活动的删除操作");
+
+        String[] ids = request.getParameterValues("id");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        boolean flag = as.delete(ids);
+
+        PrintJson.printJsonFlag(response, flag);
 
 
     }
@@ -80,9 +98,15 @@ public class ActivityController extends HttpServlet {
 
         /*
 
-            前端需要的是市场活动信息列表和一个查询的总记录条数
+            前端需要的是市场活动信息列表和
+            一个查询的总记录条数
             业务层拿到了以上两项信息之后，然后怎么返回数据呢
             map
+            map.put("total":total)
+            map.put("dataList":dataList);
+            map-----json
+
+            --------------
             vo   *
             （复用率少就临时使用map、复用率高就是用Vo）
 

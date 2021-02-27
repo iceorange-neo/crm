@@ -31,13 +31,12 @@
     <!--getTotalByCondition-->
     <select id="getTotalByCondition" resultType="int">
         select count(*)
-
         from tbl_activity a
         join tbl_user u
         on a.owner=u.id
         <where>
             <if test="name!=null and name!=''">
-                a.name= like '%' #{name} '%'
+                a.name like '%' #{name} '%'
             </if>
 
             <if test="owner!=null and owner!=''">
@@ -62,13 +61,14 @@
             u.name as owner,
             a.startDate,
             a.endDate
+
         from tbl_activity a
         join tbl_user u
         on a.owner=u.id
 
         <where>
             <if test="name!=null and name!=''">
-                a.name= like '%' #{name} '%'
+                a.name like '%' #{name} '%'
             </if>
 
             <if test="owner!=null and owner!=''">
