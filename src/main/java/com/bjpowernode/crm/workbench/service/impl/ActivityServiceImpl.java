@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.settings.dao.IUserDao;
+import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.utils.SqlSessionUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ActivityDao;
@@ -8,6 +10,7 @@ import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +23,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     private ActivityDao activityDao = SqlSessionUtil.getSqlSession().getMapper(ActivityDao.class);
     private ActivityRemarkDao activityRemarkDao = SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
+    private IUserDao userDao = SqlSessionUtil.getSqlSession().getMapper(IUserDao.class);
 
     @Override
     public boolean save(Activity activity) {
@@ -78,5 +82,65 @@ public class ActivityServiceImpl implements ActivityService {
         return flag;
     }
 
+    @Override
+    public Map<String, Object> getUserListAndActivity(String id) {
 
+        // 查询用户列表userList
+        List<User> userList = userDao.getUserList();
+
+        // 根据id查询市场活动对象activity
+        Activity activity = activityDao.getById(id);
+
+        // 将userList和activity封装在一个map中将其返回
+        Map<String, Object> map = new HashMap<>();
+        map.put("userList", userList);
+        map.put("activity", activity);
+
+        return map;
+    }
+
+    @Override
+    public boolean update(Activity activity){
+        boolean flag = true;
+
+        int count = activityDao.update(activity);
+        if(count != 1){
+            flag = false;
+        }
+
+        return flag;
+    }
+
+    @Override
+    public Activity detail(String id) {
+
+        Activity activity = activityDao.detail(id);
+
+        return activity;
+    }
+
+    @Override
+    public List<ActivityRemark> getRemarkListByAid(String activityId) {
+
+        List<ActivityRemark> arList = activityRemarkDao.getRemarkListByAid(activityId);
+
+        return arList;
+    }
+
+    @Override
+    public boolean deleteRemark(String id) {
+
+        boolean flag = false;
+
+        int count = activityRemarkDao.deleteById(id);
+        System.out.println("count=============" + count);
+
+        if(count == 1){
+
+            flag = true;
+
+        }
+
+        return flag;
+    }
 }

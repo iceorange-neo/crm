@@ -32,4 +32,14 @@
             #{aid}
         </foreach>
     </delete>
+
+    <select id="getRemarkListByAid" resultType="com.bjpowernode.crm.workbench.domain.ActivityRemark">
+
+        select * from tbl_activity_remark where activityId=#{activityId}
+
+    </select>
+
+    <delete id="deleteById">
+        delete from tbl_activity_remark where id=#{id}
+    </delete>
 </mapper>
