@@ -42,4 +42,35 @@
     <delete id="deleteById">
         delete from tbl_activity_remark where id=#{id}
     </delete>
+
+    <insert id="saveRemark">
+        insert into tbl_activity_remark(
+            id,
+            noteContent,
+            createTime,
+            createBy,
+            editFlag,
+            activityId
+        )
+        values(
+            #{id},
+            #{noteContent},
+            #{createTime},
+            #{createBy},
+            #{editFlag},
+            #{activityId}
+        )
+    </insert>
+
+    <update id="updateRemarkById">
+
+        update tbl_activity_remark
+        set
+        noteContent=#{noteContent},
+        editTime=#{editTime},
+        editBy=#{editBy},
+        editFlag=#{editFlag}
+        where id=#{id}
+
+    </update>
 </mapper>

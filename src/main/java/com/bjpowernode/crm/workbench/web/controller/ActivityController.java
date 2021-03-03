@@ -12,6 +12,7 @@ import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.ActivityRemark;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.impl.ActivityServiceImpl;
+import jdk.nashorn.internal.ir.Flags;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -71,7 +72,78 @@ public class ActivityController extends HttpServlet {
 
             deleteRemark(request, response);
 
+        }else if("/workbench/activity/saveRemark.do".equals(path)){
+
+            saveRemark(request, response);
+
+        }else if("/workbench/activity/updateRemark.do".equals(path)){
+
+            updateRemark(request, response);
+
         }
+
+
+    }
+
+    private void updateRemark(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入市场备注信息修改操作");
+
+        String id = request.getParameter("id");
+        String noteContent = request.getParameter("noteContent");
+        String editTime = DateTimeUtil.getSysTime();
+        String editBy = ((User)request.getSession().getAttribute("user")).getName();
+        String editFlag = "1";  // 1表示已经修改
+
+        ActivityRemark activityRemark = new ActivityRemark();
+        activityRemark.setId(id);
+        activityRemark.setNoteContent(noteContent);
+        activityRemark.setEditFlag(editFlag);
+        activityRemark.setEditTime(editTime);
+        activityRemark.setEditBy(editBy);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        boolean flag = as.updateRemark(activityRemark);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", flag);
+        map.put("activityRemark", activityRemark);
+
+        PrintJson.printJsonObj(response, map);
+
+
+
+    }
+
+
+    private void saveRemark(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入备注信息添加");
+
+        String noteContent = request.getParameter("noteContent");
+        String activityId = request.getParameter("activityId");
+        String id = UUIDUtil.getUUID();
+        String createTime = DateTimeUtil.getSysTime();
+        String createBy = ((User) request.getSession().getAttribute("user")).getName();
+        String editFlag = "0";
+        ActivityRemark activityRemark = new ActivityRemark();
+        activityRemark.setId(id);
+        activityRemark.setNoteContent(noteContent);
+        activityRemark.setActivityId(activityId);
+        activityRemark.setCreateBy(createBy);
+        activityRemark.setCreateTime(createTime);
+        activityRemark.setEditFlag(editFlag);
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        boolean flag = as.saveRemark(activityRemark);
+
+        // 后端需要向前端返回的数据有success、activityRemark
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", flag);
+        map.put("activityRemark", activityRemark);
+
+        PrintJson.printJsonObj(response, map);
+
 
 
     }
@@ -82,10 +154,14 @@ public class ActivityController extends HttpServlet {
 
         String id = request.getParameter("id");
 
+        System.out.println(id);
+        System.out.println("===================================");
         ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
 
         boolean flag = as.deleteRemark(id);
+
         System.out.println("=================" + flag);
+
         PrintJson.printJsonFlag(response, flag);
 
     }
