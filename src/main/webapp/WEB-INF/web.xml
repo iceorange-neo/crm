@@ -26,6 +26,11 @@
         <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
+    <!--SysInitListener-->
+    <listener>
+        <listener-class>com.bjpowernode.crm.web.listener.SysInitListener</listener-class>
+    </listener>
+
     <!--LoginFilter-->
     <filter>
         <filter-name>LoginFiler</filter-name>
@@ -68,5 +73,18 @@
         <url-pattern>/workbench/activity/deleteRemark.do</url-pattern>
         <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
         <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
+    </servlet-mapping>
+
+    <!--ClueController-->
+    <servlet>
+        <servlet-name>ClueController</servlet-name>
+        <servlet-class>com.bjpowernode.crm.workbench.web.controller.ClueController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ClueController</servlet-name>
+        <url-pattern>/workbench/clue/getUserList.do</url-pattern>
+        <url-pattern>/workbench/clue/save.do</url-pattern>
+        <url-pattern>/workbench/clue/cluePageList.do</url-pattern>
+        <url-pattern>/workbench/clue/detail.do</url-pattern>
     </servlet-mapping>
 </web-app>
