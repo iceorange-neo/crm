@@ -6,4 +6,5 @@ package com.bjpowernode.crm.workbench.dao;
  * @time 16:37
  */
 public interface ClueActivityRelationDao {
+    int unlocate(String id);
 }

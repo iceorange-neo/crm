@@ -191,7 +191,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				$.each(data.dataList, function(index, clue){
 					html += '<tr>';
 					html += '<td><input name="xz" type="checkbox" id="'+clue.id+'"/></td>';
-					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?'+clue.id+'\';">'+clue.fullname+'</a></td>';
+					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?id='+clue.id+'\';">'+clue.fullname+'</a></td>';
 					html += '<td>'+clue.company+'</td>';
 					html += '<td>'+clue.phone+'</td>';
 					html += '<td>'+clue.mphone+'</td>';

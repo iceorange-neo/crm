@@ -25,5 +25,6 @@
         <mapper resource="com/bjpowernode/crm/settings/dao/DicTypeDao.xml" />
         <mapper resource="com/bjpowernode/crm/settings/dao/DicValueDao.xml" />
         <mapper resource="com/bjpowernode/crm/workbench/dao/ClueDao.xml" />
+        <mapper resource="com/bjpowernode/crm/workbench/dao/ClueActivityRelationDao.xml" />
     </mappers>
 </configuration>

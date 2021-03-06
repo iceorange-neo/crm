@@ -8,8 +8,11 @@ import com.bjpowernode.crm.utils.PrintJson;
 import com.bjpowernode.crm.utils.ServiceFactory;
 import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
+import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
+import com.bjpowernode.crm.workbench.service.impl.ActivityServiceImpl;
 import com.bjpowernode.crm.workbench.service.impl.ClueServiceImpl;
 
 import javax.servlet.ServletException;
@@ -51,17 +54,56 @@ public class ClueController extends HttpServlet {
         }else if("/workbench/clue/detail.do".equals(path)){
             
             detail(request, response);
+
+        }else if("/workbench/clue/showActivityList.do".equals(path)){
+
+            showActivityList(request, response);
+
+        }else if("/workbench/clue/unlocate.do".equals(path)){
+
+            unlocate(request, response);
+
         }
+    }
+
+    private void unlocate(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入解除关联相关操作");
+
+        String id = request.getParameter("id");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        boolean flag = cs.unlocate(id);
+
+        PrintJson.printJsonFlag(response, flag);
+
+    }
+
+    private void showActivityList(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入线索模块的展现市场活动列表");
+
+        String clueId = request.getParameter("clueId");
+
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+        List<Activity> aList = as.showActivityListByClueId(clueId);
+
+        PrintJson.printJsonObj(response, aList);
+
     }
 
     private void detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("跳转到线索的详细信息页");
 
         String id = request.getParameter("id");
+        System.out.println("线索id====" + id);
 
         ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
 
         Clue clue = cs.detail(id);
+        System.out.println(clue);
 
         request.setAttribute("clue",clue);
 

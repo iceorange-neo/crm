@@ -120,4 +120,15 @@
         tbl_activity a join tbl_user u on
         a.owner=u.id where a.id=#{id}
     </select>
+
+    <select id="showActivityListByClueId" resultType="com.bjpowernode.crm.workbench.domain.Activity">
+
+        select
+            car.id as id,a.name,a.startDate,a.endDate,u.name as owner
+
+        from tbl_activity a join tbl_clue_activity_relation car
+        on car.activityId=a.id join tbl_user u on a.owner= u.id
+        where car.clueId=#{clueId}
+
+    </select>
 </mapper>

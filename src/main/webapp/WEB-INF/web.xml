@@ -86,5 +86,7 @@
         <url-pattern>/workbench/clue/save.do</url-pattern>
         <url-pattern>/workbench/clue/cluePageList.do</url-pattern>
         <url-pattern>/workbench/clue/detail.do</url-pattern>
+        <url-pattern>/workbench/clue/showActivityList.do</url-pattern>
+        <url-pattern>/workbench/clue/unlocate.do</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -17,4 +17,6 @@ public interface ClueService {
     PaginationVo<Clue> cluePageList(Map<String, Object> map);
 
     Clue detail(String id);
+
+    boolean unlocate(String id);
 }
