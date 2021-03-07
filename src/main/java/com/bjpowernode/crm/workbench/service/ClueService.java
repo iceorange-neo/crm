@@ -19,4 +19,6 @@ public interface ClueService {
     Clue detail(String id);
 
     boolean unlocate(String id);
+
+    Map<String, Object> getUserListAndClue(String id);
 }

@@ -63,7 +63,47 @@ public class ClueController extends HttpServlet {
 
             unlocate(request, response);
 
+        }else if("/workbench/clue/getUserListAndClue.do".equals(path)){
+            
+            getUserListAndClue(request, response);
+
+        }else if("/workbench/clue/getActivityListByName.do".equals(path)){
+
+            getActivityListByName(request, response);
+
         }
+    }
+
+    private void getActivityListByName(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入通过name模糊查询activityList市场活动列表，排除掉clueId已经关联了的");
+
+        String activityName = request.getParameter("activityName");
+        String clueId = request.getParameter("clueId");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("activityName", activityName);
+        map.put("clueId", clueId);
+
+        // 市场活动相关的操作
+        ActivityService as = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+
+
+        List<Activity> aList = as.getActivityListByName(map);
+
+        PrintJson.printJsonObj(response, aList);
+    }
+
+    private void getUserListAndClue(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入线索模块的线索记录铺设");
+        String id = request.getParameter("id");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        Map<String, Object> map = cs.getUserListAndClue(id);
+
+        PrintJson.printJsonObj(response, map);
+
     }
 
     private void unlocate(HttpServletRequest request, HttpServletResponse response) {

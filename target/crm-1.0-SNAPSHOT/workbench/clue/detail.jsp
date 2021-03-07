@@ -55,6 +55,49 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		// 在页面加载完毕的时候，展现市场活动关联列表
 		showActivityList();
 
+		// 为关联市场活动的模态窗口中的搜索框绑定事件
+		$("#searchByAName").keydown(function(event){
+
+			if(event.keyCode==13){
+				// 发送ajax请求进行按照activityName来进行模糊查询
+				$.ajax({
+
+					url:"workbench/clue/getActivityListByName.do",
+					data:{
+						"activityName":$.trim($("#searchByAName").val()),
+						"clueId":"${requestScope.clue.id}"
+					},
+					dataType:"json",
+					type:"get",
+					success:function(data){
+						/*
+							data:
+								[{市场活动列表1},{2}....]
+
+						 */
+						var html = "";
+						$.each(data, function(index, activity){
+							html += '<tr>';
+							html += '<td><input type="checkbox"/></td>';
+							html += '<td>'+activity.name+'</td>';
+							html += '<td>'+activity.startDate+'</td>';
+							html += '<td>'+activity.endDate+'</td>';
+							html += '<td>'+activity.owner+'</td>';
+							html += '</tr>';
+						});
+
+						// 将动态生成的tr拼接到tbody中
+						$("#activityTBody").html(html);
+					}
+
+				});
+				// 展现完毕列表后，将模态窗口中回车默认的行为禁止
+				return false;
+			}
+
+
+		})
+
 	});
 
 	// 自定义方法展现市场活动关联列表
@@ -141,7 +184,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="searchByAName" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -157,21 +200,21 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="activityTBody">
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>

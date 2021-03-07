@@ -19,4 +19,6 @@ public interface ClueDao {
     int getTotalByCondition(Map<String, Object> map);
 
     Clue detail(String id);
+
+    Clue getClueById(String id);
 }

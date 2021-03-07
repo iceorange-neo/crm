@@ -178,4 +178,12 @@ public class ActivityServiceImpl implements ActivityService {
 
         return aList;
     }
+
+    @Override
+    public List<Activity> getActivityListByName(Map<String, String> map) {
+
+        List<Activity> aList = activityDao.getActivityListByName(map);
+
+        return aList;
+    }
 }

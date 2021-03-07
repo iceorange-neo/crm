@@ -131,4 +131,25 @@
         where car.clueId=#{clueId}
 
     </select>
+
+    <select id="getActivityListByName" resultType="com.bjpowernode.crm.workbench.domain.Activity">
+        select
+            a.id,
+            a.name,
+            a.startDate,
+            a.endDate,
+            u.name as owner
+        from tbl_user u join tbl_activity a
+        on u.id=a.owner
+        where a.name like '%' #{activityName} '%' and a.id not in(
+            select
+
+                activityId
+
+            from tbl_clue_activity_relation
+            where clueId=#{clueId}
+        )
+
+
+    </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.bjpowernode.crm.workbench.service.impl;
 
+import com.bjpowernode.crm.settings.dao.IUserDao;
+import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.utils.SqlSessionUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao;
@@ -7,6 +9,7 @@ import com.bjpowernode.crm.workbench.dao.ClueDao;
 import com.bjpowernode.crm.workbench.domain.Clue;
 import com.bjpowernode.crm.workbench.service.ClueService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +22,7 @@ public class ClueServiceImpl implements ClueService {
 
     private ClueDao clueDao = SqlSessionUtil.getSqlSession().getMapper(ClueDao.class);
     private ClueActivityRelationDao clueActivityRelationDao = SqlSessionUtil.getSqlSession().getMapper(ClueActivityRelationDao.class);
+    private IUserDao userDao = SqlSessionUtil.getSqlSession().getMapper(IUserDao.class);
 
 
     @Override
@@ -70,5 +74,20 @@ public class ClueServiceImpl implements ClueService {
         }
 
         return flag;
+    }
+
+    @Override
+    public Map<String, Object> getUserListAndClue(String id) {
+        // 获取用户列表
+        List<User> uList = userDao.getUserList();
+
+        // 获取Clue线索信息(根据id查出)
+        Clue clue = clueDao.getClueById(id);
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("uList", uList);
+        map.put("clue", clue);
+
+        return map;
     }
 }
