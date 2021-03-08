@@ -24,6 +24,14 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	$(function(){
 
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-left"
+		});
 		/*
 			操作模态窗口的方式：
 				需要操作的模态窗口的jquery对象，调用modal方法，向其中传递参数 show：展现   hide：关闭
@@ -681,13 +689,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="search-starDate" />
+					  <input class="form-control time" type="text" id="search-starDate" />
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="search-endDate">
+					  <input class="form-control time" type="text" id="search-endDate">
 				    </div>
 				  </div>
 				  

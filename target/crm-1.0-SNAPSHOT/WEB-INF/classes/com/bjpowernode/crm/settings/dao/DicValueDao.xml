@@ -5,7 +5,7 @@
 <mapper namespace="com.bjpowernode.crm.settings.dao.DicValueDao">
 
     <select id="getDicValueList" resultType="com.bjpowernode.crm.settings.domain.DicValue">
-        select * from tbl_dic_value where TypeCode=#{code}
+        select * from tbl_dic_value where TypeCode=#{code} order by orderNo
     </select>
 
 

@@ -78,7 +78,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						var html = "";
 						$.each(data, function(index, activity){
 							html += '<tr>';
-							html += '<td><input type="checkbox"/></td>';
+							html += '<td><input type="checkbox" name="xz" value="'+activity.id+'"/></td>';
 							html += '<td>'+activity.name+'</td>';
 							html += '<td>'+activity.startDate+'</td>';
 							html += '<td>'+activity.endDate+'</td>';
@@ -94,9 +94,70 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				// 展现完毕列表后，将模态窗口中回车默认的行为禁止
 				return false;
 			}
+		});
 
+		// 全选操作和取消全选操作
+		$("#qx").click(function(){
+			$("input[name=xz]").prop("checked", this.checked);
+		});
 
-		})
+		// 为数据行绑定事件
+		$("#activityTBody").on("click", $("input[name=xz]"), function(){
+
+			$("#qx").prop("checked", $("input[name=xz]").length==$("input[name=xz]:checked").length);
+
+		});
+
+		// 为关联绑定事件
+		$("#associationBtn").click(function(){
+			// 挑中的复选框的个数不能为0
+			var $xz = $("input[name=xz]:checked");
+
+			if($xz.length==0){
+
+				alert("请选中需要和该线索关联的市场活动,可支持批量关联");
+
+			// 选中了一条或者多条
+			}else{
+
+				// 需要想服务端发送的请求参数的格式:  workbench/clue/association.do?clueId=xxx&activityId=xxx&activityId=xxx...
+				var param = "clueId=${requestScope.clue.id}&";
+				for (var i = 0; i < $xz.length; i++){
+					param += "activityId="+$xz[i].value;
+					if(i < $xz.length - 1){
+						param += "&";
+					}
+				}
+
+				$.ajax({
+					url:"workbench/clue/association.do",
+					data:param,
+					dataType:"json",
+					type:"post",
+					success:function(data){
+						/*
+							data:
+							{success:true/false}
+						 */
+						if(data.success){
+							// 关闭该模态窗口
+							$("#bundModal").modal("hide");
+							// 刷新市场活动列表
+							showActivityList();
+							// 清空文本框中的填写的值
+							$("#searchByAName").val("");
+							// 将该body中的列表赋值为空
+							$("#activityTBody").html("");
+						}else{
+							alert("关联失败");
+						}
+					}
+				});
+
+			}
+		});
+
+		// 其他绑定事件
 
 	});
 
@@ -192,7 +253,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="qx"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -220,7 +281,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="associationBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -393,7 +454,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>${requestScope.clue.fullname} <small>${requestScope.clue.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp?fullname=${requestScope.clue.fullname}&appellation=${requestScope.clue.appellation}&company=${requestScope.clue.company}&owner=${requestScope.clue.owner}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>

@@ -3,10 +3,12 @@ package com.bjpowernode.crm.workbench.service.impl;
 import com.bjpowernode.crm.settings.dao.IUserDao;
 import com.bjpowernode.crm.settings.domain.User;
 import com.bjpowernode.crm.utils.SqlSessionUtil;
+import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.dao.ClueActivityRelationDao;
 import com.bjpowernode.crm.workbench.dao.ClueDao;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.ClueActivityRelation;
 import com.bjpowernode.crm.workbench.service.ClueService;
 
 import java.util.HashMap;
@@ -89,5 +91,25 @@ public class ClueServiceImpl implements ClueService {
         map.put("clue", clue);
 
         return map;
+    }
+
+    @Override
+    public boolean association(String clueId, String[] activityIds) {
+
+        boolean flag = true;
+        for (String activityId : activityIds){
+
+            // 给每一个activityId和clueId做关联
+            ClueActivityRelation car = new ClueActivityRelation();
+            car.setId(UUIDUtil.getUUID());
+            car.setClueId(clueId);
+            car.setActivityId(activityId);
+            int count = clueActivityRelationDao.association(car);
+            if(count != 1){
+                flag = false;
+            }
+
+        }
+        return flag;
     }
 }

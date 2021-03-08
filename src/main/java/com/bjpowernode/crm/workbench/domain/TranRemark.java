@@ -2,20 +2,20 @@ package com.bjpowernode.crm.workbench.domain;
 
 /**
  * @author neo
- * @date 2021/3/3
- * @time 16:33
+ * @date 2021/3/8
+ * @time 14:00
  */
-public class ContactsRemark {
-    private String id ;
+public class TranRemark {
+    private String id;
     private String noteContent;
     private String createBy;
     private String createTime;
     private String editBy;
     private String editTime;
     private String editFlag;
-    private String contactsId;
+    private String tranId;
 
-    public ContactsRemark() {
+    public TranRemark() {
     }
 
     public String getId() {
@@ -74,11 +74,11 @@ public class ContactsRemark {
         this.editFlag = editFlag;
     }
 
-    public String getContactsId() {
-        return contactsId;
+    public String getTranId() {
+        return tranId;
     }
 
-    public void setContactsId(String contactsId) {
-        this.contactsId = contactsId;
+    public void setTranId(String tranId) {
+        this.tranId = tranId;
     }
 }

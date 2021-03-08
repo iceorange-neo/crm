@@ -21,4 +21,6 @@ public interface ClueService {
     boolean unlocate(String id);
 
     Map<String, Object> getUserListAndClue(String id);
+
+    boolean association(String clueId, String[] activityIds);
 }

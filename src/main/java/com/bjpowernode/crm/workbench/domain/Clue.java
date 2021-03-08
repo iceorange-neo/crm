@@ -7,25 +7,25 @@ package com.bjpowernode.crm.workbench.domain;
  */
 public class Clue {
     private String id;
-    private String fullname;
-    private String appellation;
-    private String owner;
-    private String company;
-    private String job;
-    private String email;
-    private String phone;
-    private String website;
-    private String mphone;
-    private String state;
-    private String source;
-    private String createBy;
-    private String createTime;
-    private String editBy;
-    private String editTime;
-    private String description;
-    private String contactSummary;
-    private String nextContactTime;
-    private String address;
+    private String fullname;    // 名称
+    private String appellation; // 称呼（称谓）
+    private String owner;   // 所有者---外键
+    private String company; // 公司
+    private String job; // 工作
+    private String email;   // 邮箱
+    private String phone;   // 公司座机
+    private String website; // 公司网站
+    private String mphone;  // 手机号码
+    private String state;   // 线索状态
+    private String source;  // 线索来源
+    private String createBy;    // 创建人
+    private String createTime;  // 创建时间
+    private String editBy;  // 修改人
+    private String editTime;    // 修改时间
+    private String description; // 描述信息
+    private String contactSummary;  // 联系纪要
+    private String nextContactTime; // 下次联系时间
+    private String address; // 地址
 
     public Clue() {
     }
