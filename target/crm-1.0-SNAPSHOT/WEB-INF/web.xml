@@ -92,5 +92,6 @@
         <url-pattern>/workbench/clue/getActivityListByName.do</url-pattern>
         <url-pattern>/workbench/clue/association.do</url-pattern>
         <url-pattern>/workbench/clue/getActivityListByNameLike.do</url-pattern>
+        <url-pattern>/workbench/clue/convert.do</url-pattern>
     </servlet-mapping>
 </web-app>

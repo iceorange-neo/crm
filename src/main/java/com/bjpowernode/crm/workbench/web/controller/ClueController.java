@@ -79,7 +79,26 @@ public class ClueController extends HttpServlet {
 
             getActivityListByNameLike(request, response);
 
+        }else if("/workbench/clue/convert.do".equals(path)){
+
+            convert(request, response);
+
         }
+    }
+
+    private void convert(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("进入线索转换：是否创建交易和不创建交易");
+
+        // 接收是否需要创建交易的标记
+        String flag = request.getParameter("flag");
+
+        // 如果需要创建交易
+        if("a".equals(flag)){
+
+            // 接收表单中的所有参数
+        }
+
     }
 
     private void getActivityListByNameLike(HttpServletRequest request, HttpServletResponse response) {
