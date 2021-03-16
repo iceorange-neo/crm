@@ -10,6 +10,7 @@ import com.bjpowernode.crm.utils.UUIDUtil;
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.domain.Activity;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.Tran;
 import com.bjpowernode.crm.workbench.service.ActivityService;
 import com.bjpowernode.crm.workbench.service.ClueService;
 import com.bjpowernode.crm.workbench.service.impl.ActivityServiceImpl;
@@ -83,20 +84,80 @@ public class ClueController extends HttpServlet {
 
             convert(request, response);
 
+        }else if("/workbench/clue/delete.do".equals(path)){
+
+            delete(request, response);
+
         }
     }
 
-    private void convert(HttpServletRequest request, HttpServletResponse response) {
+    private void delete(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("进入线索信息删除");
+
+        // 接收所需要删除的参数信息
+        String[] ids = request.getParameterValues("id");
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        boolean flag = cs.delete(ids);
+
+        PrintJson.printJsonFlag(response, flag);
+    }
+
+    private void convert(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         System.out.println("进入线索转换：是否创建交易和不创建交易");
 
+        String clueId = request.getParameter("clueId");
         // 接收是否需要创建交易的标记
         String flag = request.getParameter("flag");
 
+        Tran t = null;
+
+        String createBy = ((User)request.getSession().getAttribute("user")).getName();
         // 如果需要创建交易
         if("a".equals(flag)){
+            t = new Tran();
 
-            // 接收表单中的所有参数
+            // 接收交易表单中的所有参数
+            String money = request.getParameter("money");
+            String name = request.getParameter("name");
+            String expectedDate = request.getParameter("expectedDate");
+            String stage = request.getParameter("stage");
+            String activityId = request.getParameter("activityId");
+            String id = UUIDUtil.getUUID();
+            String createTime = DateTimeUtil.getSysTime();
+
+            t.setId(id);
+            t.setMoney(money);
+            t.setActivityId(activityId);
+            t.setCreateTime(createTime);
+            t.setName(name);
+            t.setExpectedDate(expectedDate);
+            t.setStage(stage);
+            t.setCreateBy(createBy);
+
+        }
+
+        ClueService cs = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        /*
+            为业务层传递的参数：
+            1、必须传递的参数clueId，有了这个clueId才知道转换的是哪一条参数
+            2、必须传递的参数Tran，因为在线索转换的过程中，有可能会创建一笔交易（业务层接收到的Tran有可能是null）
+            3、当将来我们需要在业务层做大量的添加操作的时候：因为创建时间、id等都可以通过工具类生成(可以在业务层取得)，但是我们的创建人不行，只能从request域中取得
+                但是，若我们将request对象传递给业务层就不合理，我们基于MVC标准分层开发思想。
+                故此我们直接传递createBy。
+
+         */
+        boolean success = cs.convert(clueId, t, createBy);
+
+        // 对于传统请求怎么响应：请求转发或者重定向（此处采用重定向）
+        // 因为没有使用到request域
+        if(success){
+
+            response.sendRedirect(request.getContextPath()+"/workbench/clue/index.jsp");
+
         }
 
     }

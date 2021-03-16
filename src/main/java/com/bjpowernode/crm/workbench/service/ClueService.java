@@ -2,6 +2,7 @@ package com.bjpowernode.crm.workbench.service;
 
 import com.bjpowernode.crm.vo.PaginationVo;
 import com.bjpowernode.crm.workbench.domain.Clue;
+import com.bjpowernode.crm.workbench.domain.Tran;
 
 import java.util.Map;
 
@@ -23,4 +24,8 @@ public interface ClueService {
     Map<String, Object> getUserListAndClue(String id);
 
     boolean association(String clueId, String[] activityIds);
+
+    boolean delete(String[] ids);
+
+    boolean convert(String clueId, Tran t, String createBy);
 }

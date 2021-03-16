@@ -115,8 +115,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						// cluePageList(1, 2);
 
 						// 操作结束之后维持设置好的参数
-						pageList(1,
-								$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+						cluePageList(1,
+								$("#cluePage").bs_pagination('getOption', 'rowsPerPage'));
 						// 添加成功后，重置表单儿
 						$("#saveForm")[0].reset();
 
@@ -138,6 +138,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		// 为查询按钮绑定事件
 		$("#searchSubmitBtn").click(function(){
 			cluePageList(1, 2);
+			// 查询成功后，重置表单儿
+			$("#queryForm")[0].reset();
 		});
 
 		// 为全选按钮绑定事件
@@ -158,7 +160,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			var $xz = $("input[name=xz]:checked");
 			if($xz.length == 0){
 
-				alert("请选择所需要删除的线索信息");
+				alert("请选择所需要修改的线索信息");
 
 			// 选中了超过一条的线索数据
 			}else if($xz.length > 1){
@@ -217,6 +219,51 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 
 		// 其他事件编写
+		// 删除某条或者多条信息
+		$("#deleteBtn").click(function(){
+			// alert("123");
+			var $xz = $("input[name=xz]:checked");
+			if($xz.length == 0){
+
+				alert("请选择所需要删除的线索信息,支持批量删除");
+
+			// 选择了所需要删除的记录
+			}else {
+				if (confirm("确定要删除所选线索记录")) {
+
+					var param = "";
+
+					for(var i = 0; i < $xz.length; i++){
+						param += "id=" + $xz[i].value;
+						if(i < $xz.length - 1){
+							param += "&";
+						}
+					}
+					$.ajax({
+						url:"workbench/clue/delete.do",
+						data:param,
+						dataType:"json",
+						type:"get",
+						success:function(data){
+							/*
+								data:
+									{"success":true/false}
+							 */
+							if(data.success){
+								// 删除成功
+								alert("删除成功");
+								// 刷新线索列表
+								cluePageList(1, 2);
+							}else{
+								alert("删除失败");
+							}
+						}
+					});
+				}
+			}
+		});
+
+		// 其他事件绑定
 
 		
 	});
@@ -271,6 +318,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				$("#cluePageListBody").html(html);
 
 				// 计算总页数
+				// 必须记住的关于分页查询的公式：
 				var totalPages = data.total % pageSize == 0 ? data.total/pageSize: parseInt(data.total/pageSize) + 1;
 
 				// 数据处理完毕之后，结合分页插件，对前端展现分页相关的信息
@@ -646,7 +694,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		<div style="width: 100%; position: absolute;top: 5px; left: 10px;">
 		
 			<div class="btn-toolbar" role="toolbar" style="height: 80px;">
-				<form class="form-inline" role="form" style="position: relative;top: 8%; left: 5px;">
+				<form id="queryForm" class="form-inline" role="form" style="position: relative;top: 8%; left: 5px;">
 				  
 				  <div class="form-group">
 				    <div class="input-group">
@@ -740,7 +788,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="createBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
 				  <button type="button" class="btn btn-default" id="editBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
